@@ -141,7 +141,7 @@ public class VirtualStore {
         return found;
     }
 
-    public void purchase(Client client) {
+   public void purchase(Client client) {
         Scanner scanner = new Scanner(System.in);
         CartShop cartShop = new CartShop();
         int productNum;
@@ -160,17 +160,22 @@ public class VirtualStore {
             } while (invalidOption);
 
             if (productNum != -1) {
-                System.out.println("Please enter the sum of the product that you want: ");
-                sumOfProduct = scanner.nextInt();
-                Product chosenProduct = this.productListInStock.get(productNum);
-                cartShop.addForProductList(chosenProduct);
-                if (client.isMember()) {
-                    updatedPrice = updatedPriceForMemberClients(client, chosenProduct);
-                } else
-                    updatedPrice = chosenProduct.getPrice();
-                cartShop.addForBill((updatedPrice * sumOfProduct));
-                System.out.println("The product added !");
-                System.out.println(cartShop.toString());
+                do {
+                    System.out.println("Please enter the sum of the product that you want: ");
+                    sumOfProduct = scanner.nextInt();
+                        if (sumOfProduct > 0) {
+                            Product chosenProduct = this.productListInStock.get(productNum);
+                            cartShop.addForProductList(chosenProduct);
+                            if (client.isMember()) {
+                                updatedPrice = updatedPriceForMemberClients(client, chosenProduct);
+                            } else
+                                updatedPrice = chosenProduct.getPrice();
+                            cartShop.addForBill((updatedPrice * sumOfProduct));
+                            System.out.println("The product added !");
+                            System.out.println(cartShop.toString());
+                        }else
+                            System.out.println("PLEASE CHOOSE NUMBER UP TO 0");
+                } while (sumOfProduct <= 0);
             }
 
         } while (productNum != -1);
@@ -188,7 +193,6 @@ public class VirtualStore {
         client.updateTheLastDate();
         client.updateTheSumOfThePurchase();
     }
-
     public boolean checkIfContainsNum(String name) {
         for (int i = 0; i < name.length(); i++) {
             char currentChar = name.charAt(i);
